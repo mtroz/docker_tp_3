@@ -1,0 +1,42 @@
+version : "3.9"
+
+volumes:
+  web_data:
+    name: share
+
+
+services:
+
+  frontend:
+    volumes:
+      - .:/code
+    image: "centos:centos8"
+    networks :
+      - frontend
+    volumes:
+      - web_data:/app
+    command: tail -f
+
+  db:
+    image: "centos:centos8"
+    networks:
+      - db
+    command: tail -f
+
+  backend:
+    image: "centos:centos8"
+    networks:
+      - db
+      - frontend
+    volumes:
+      - web_data:/app
+    command: tail -f
+
+networks:
+  frontend:
+    name: frontlan
+    driver: bridge
+  db:
+    name: dblan
+    driver: bridge
+
